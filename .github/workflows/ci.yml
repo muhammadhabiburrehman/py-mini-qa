@@ -34,7 +34,7 @@ jobs:
         run: pytest --cov=app --cov-report=xml --cov-report=term-missing
         
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v2.0.2  # Fixed version instead of @master
+        uses: SonarSource/sonarqube-scan-action@v1.3.0  # Correct version
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -42,7 +42,7 @@ jobs:
           
       - name: SonarQube Quality Gate
         id: qg
-        uses: SonarSource/sonarqube-quality-gate-action@v1.3.0  # Fixed version instead of @master
+        uses: SonarSource/sonarqube-quality-gate-action@master  # Use master for this action
         timeout-minutes: 5  # Add timeout to prevent hanging
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
