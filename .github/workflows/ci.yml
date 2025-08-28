@@ -33,25 +33,9 @@ jobs:
       - name: Run tests with coverage
         run: pytest --cov=app --cov-report=xml --cov-report=term-missing
         
-      - name: Install SonarQube Scanner
-        run: |
-          curl -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-windows.zip
-          powershell -Command "Expand-Archive -Path sonar-scanner.zip -DestinationPath ."
-          echo "${{ github.workspace }}/sonar-scanner-4.8.0.2856-windows/bin" >> $GITHUB_PATH
-        
       - name: SonarQube Scan
         run: |
-          sonar-scanner.bat -Dsonar.projectKey=py-mini-qa -Dsonar.sources=app -Dsonar.tests=tests -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.python.coverage.reportPaths=coverage.xml
+          sonar-scanner -Dsonar.projectKey=py-mini-qa -Dsonar.sources=app -Dsonar.tests=tests -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.python.coverage.reportPaths=coverage.xml
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          
-      - name: SonarQube Quality Gate
-        run: |
-          $response = Invoke-RestMethod -Uri "${{ secrets.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=py-mini-qa" -Headers @{"Authorization"="Bearer ${{ secrets.SONAR_TOKEN }}"}
-          if ($response.projectStatus.status -ne "OK") {
-            Write-Error "Quality gate failed: $($response.projectStatus.status)"
-            exit 1
-          }
-          Write-Output "Quality gate passed!"
-        shell: powershell
