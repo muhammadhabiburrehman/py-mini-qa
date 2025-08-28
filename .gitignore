@@ -5,7 +5,7 @@ __pycache__/
 *.pyd
 .env
 .venv/
-venv/
+
 
 # Pytest
 .pytest_cache/
