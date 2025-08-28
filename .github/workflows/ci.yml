@@ -34,16 +34,9 @@ jobs:
         run: pytest --cov=app --cov-report=xml --cov-report=term-missing
         
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@master  # Use master - most stable for this action
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Added for better integration
-          
-      - name: SonarQube Quality Gate
-        id: qg
-        uses: SonarSource/sonarqube-quality-gate-action@master  # Use master for this action
-        timeout-minutes: 5  # Add timeout to prevent hanging
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        uses: kitabisa/sonarqube-action@v1.2.0
+        with:
+          host: ${{ secrets.SONAR_HOST_URL }}
+          login: ${{ secrets.SONAR_TOKEN }}
+          projectKey: py-mini-qa
+          projectName: py-mini-qa
